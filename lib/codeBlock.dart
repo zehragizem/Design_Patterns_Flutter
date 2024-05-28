@@ -1,20 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/atom-one-light.dart';
-import 'package:flutter_highlight/themes/darcula.dart';
-import 'package:flutter_highlight/themes/dark.dart';
-import 'package:flutter_highlight/themes/dracula.dart';
-import 'package:flutter_highlight/themes/github.dart';
-import 'package:flutter_highlight/themes/hybrid.dart';
-import 'package:flutter_highlight/themes/mono-blue.dart';
-import 'package:flutter_highlight/themes/monokai-sublime.dart';
-import 'package:flutter_highlight/themes/monokai.dart';
 import 'package:flutter_highlight/themes/qtcreator_light.dart';
-import 'package:flutter_highlight/themes/railscasts.dart';
-import 'package:flutter_highlight/themes/rainbow.dart';
-import 'package:flutter_highlight/themes/solarized-light.dart';
-import 'package:flutter_highlight/themes/zenburn.dart';
+
 
 class CodeBlock extends StatelessWidget {
   final String codeFilePath;

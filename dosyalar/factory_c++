@@ -1,0 +1,79 @@
+#include <iostream>
+
+// Library classes
+class Vehicle {
+public:
+    virtual void printVehicle() = 0;
+};
+
+class TwoWheeler : public Vehicle {
+public:
+    void printVehicle() override {
+        std::cout << "I am two wheeler" << std::endl;
+    }
+};
+
+class FourWheeler : public Vehicle {
+public:
+    void printVehicle() override {
+        std::cout << "I am four wheeler" << std::endl;
+    }
+};
+
+// Factory Interface
+class VehicleFactory {
+public:
+    virtual Vehicle* createVehicle() = 0;
+};
+
+// Concrete Factory for TwoWheeler
+class TwoWheelerFactory : public VehicleFactory {
+public:
+    Vehicle* createVehicle() override {
+        return new TwoWheeler();
+    }
+};
+
+// Concrete Factory for FourWheeler
+class FourWheelerFactory : public VehicleFactory {
+public:
+    Vehicle* createVehicle() override {
+        return new FourWheeler();
+    }
+};
+
+// Client class
+class Client {
+private:
+    Vehicle* pVehicle;
+public:
+    Client(VehicleFactory* factory) {
+        pVehicle = factory->createVehicle();
+    }
+
+    Vehicle* getVehicle() {
+        return pVehicle;
+    }
+};
+
+// Driver program
+int main() {
+    VehicleFactory* twoWheelerFactory = new TwoWheelerFactory();
+    Client* twoWheelerClient = new Client(twoWheelerFactory);
+    Vehicle* twoWheeler = twoWheelerClient->getVehicle();
+    twoWheeler->printVehicle();
+
+    VehicleFactory* fourWheelerFactory = new FourWheelerFactory();
+    Client* fourWheelerClient = new Client(fourWheelerFactory);
+    Vehicle* fourWheeler = fourWheelerClient->getVehicle();
+    fourWheeler->printVehicle();
+
+    delete twoWheelerFactory;
+    delete twoWheelerClient;
+    delete twoWheeler;
+    delete fourWheelerFactory;
+    delete fourWheelerClient;
+    delete fourWheeler;
+
+    return 0;
+}

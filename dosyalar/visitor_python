@@ -1,0 +1,75 @@
+from abc import ABC, abstractmethod
+
+class ItemElement(ABC):
+    @abstractmethod
+    def accept(self, visitor):
+        pass
+
+class Book(ItemElement):
+    def __init__(self, cost, isbn):
+        self.price = cost
+        self.isbnNumber = isbn
+
+    def getPrice(self):
+        return self.price
+
+    def getIsbnNumber(self):
+        return self.isbnNumber
+
+    def accept(self, visitor):
+        return visitor.visit(self)
+
+class Fruit(ItemElement):
+    def __init__(self, pricePerKg, weight, name):
+        self.pricePerKg = pricePerKg
+        self.weight = weight
+        self.name = name
+
+    def getPricePerKg(self):
+        return self.pricePerKg
+
+    def getWeight(self):
+        return self.weight
+
+    def getName(self):
+        return self.name
+
+    def accept(self, visitor):
+        return visitor.visit(self)
+
+class ShoppingCartVisitor(ABC):
+    @abstractmethod
+    def visit(self, item):
+        pass
+
+class ShoppingCartVisitorImpl(ShoppingCartVisitor):
+    def visit(self, item):
+        pass
+
+        if isinstance(item, Book):
+            cost = 0
+            if item.getPrice() > 50:
+                cost = item.getPrice() - 5
+            else:
+                cost = item.getPrice()
+            print("Book ISBN:", item.getIsbnNumber(), "cost =", cost)
+            return cost
+
+        elif isinstance(item, Fruit):
+            cost = item.getPricePerKg() * item.getWeight()
+            print(item.getName(), "cost =", cost)
+            return cost
+
+class ShoppingCartClient:
+    @staticmethod
+    def calculatePrice(items):
+        visitor = ShoppingCartVisitorImpl()
+        total = 0
+        for item in items:
+            total += item.accept(visitor)
+        return total
+
+if __name__ == "__main__":
+    items = [Book(20, "1234"), Book(100, "5678"), Fruit(10, 2, "Banana"), Fruit(5, 5, "Apple")]
+    total = ShoppingCartClient.calculatePrice(items)
+    print("Total Cost =", total)

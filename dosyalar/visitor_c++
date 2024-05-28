@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+// Forward declaration for Visitor class
+class ShoppingCartVisitor;
+
+// Abstract base class for elements in the shopping cart
+class ItemElement {
+public:
+    virtual int accept(ShoppingCartVisitor *visitor) = 0;
+};
+
+// Concrete class for books
+class Book : public ItemElement {
+private:
+    int price;
+    std::string isbnNumber;
+
+public:
+    Book(int cost, std::string isbn) : price(cost), isbnNumber(isbn) {}
+
+    int getPrice() {
+        return price;
+    }
+
+    std::string getIsbnNumber() {
+        return isbnNumber;
+    }
+
+    int accept(ShoppingCartVisitor *visitor);
+};
+
+// Concrete class for fruits
+class Fruit : public ItemElement {
+private:
+    int pricePerKg;
+    int weight;
+    std::string name;
+
+public:
+    Fruit(int priceKg, int wt, std::string nm) : pricePerKg(priceKg), weight(wt), name(nm) {}
+
+    int getPricePerKg() {
+        return pricePerKg;
+    }
+
+    int getWeight() {
+        return weight;
+    }
+
+    std::string getName() {
+        return name;
+    }
+
+    int accept(ShoppingCartVisitor *visitor);
+};
+
+// Abstract base class for visitor
+class ShoppingCartVisitor {
+public:
+    virtual int visit(Book *book) = 0;
+    virtual int visit(Fruit *fruit) = 0;
+};
+
+// Concrete visitor class
+class ShoppingCartVisitorImpl : public ShoppingCartVisitor {
+public:
+    int visit(Book *book) {
+        int cost = 0;
+        // Apply $5 discount if book price is greater than 50
+        if (book->getPrice() > 50) {
+            cost = book->getPrice() - 5;
+        } else {
+            cost = book->getPrice();
+        }
+        std::cout << "Book ISBN: " << book->getIsbnNumber() << " cost = " << cost << std::endl;
+        return cost;
+    }
+
+    int visit(Fruit *fruit) {
+        int cost = fruit->getPricePerKg() * fruit->getWeight();
+        std::cout << fruit->getName() << " cost = " << cost << std::endl;
+        return cost;
+    }
+};
+
+// Calculate total cost of items in the shopping cart
+int calculatePrice(std::vector<ItemElement*> items, ShoppingCartVisitor *visitor) {
+    int sum = 0;
+    for (ItemElement* item : items) {
+        sum += item->accept(visitor);
+    }
+    return sum;
+}
+
+int main() {
+    std::vector<ItemElement*> items = {
+        new Book(20, "1234"),
+        new Book(100, "5678"),
+        new Fruit(10, 2, "Banana"),
+        new Fruit(5, 5, "Apple")
+    };
+
+    ShoppingCartVisitor *visitor = new ShoppingCartVisitorImpl();
+    int total = calculatePrice(items, visitor);
+    std::cout << "Total Cost = " << total << std::endl;
+
+    // Free dynamically allocated memory
+    for (ItemElement* item : items) {
+        delete item;
+    }
+    delete visitor;
+
+    return 0;
+}

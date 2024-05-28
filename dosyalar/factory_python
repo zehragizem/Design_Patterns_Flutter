@@ -1,0 +1,51 @@
+# Library classes
+from abc import ABC, abstractmethod
+
+class Vehicle(ABC):
+    @abstractmethod
+    def print_vehicle(self):
+        pass
+
+class TwoWheeler(Vehicle):
+    def print_vehicle(self):
+        print("I am two wheeler")
+
+class FourWheeler(Vehicle):
+    def print_vehicle(self):
+        print("I am four wheeler")
+
+# Factory Interface
+class VehicleFactory(ABC):
+    @abstractmethod
+    def create_vehicle(self):
+        pass
+
+# Concrete Factory for TwoWheeler
+class TwoWheelerFactory(VehicleFactory):
+    def create_vehicle(self):
+        return TwoWheeler()
+
+# Concrete Factory for FourWheeler
+class FourWheelerFactory(VehicleFactory):
+    def create_vehicle(self):
+        return FourWheeler()
+
+# Client class
+class Client:
+    def __init__(self, factory):
+        self.p_vehicle = factory.create_vehicle()
+
+    def get_vehicle(self):
+        return self.p_vehicle
+
+# Driver program
+if __name__ == "__main__":
+    two_wheeler_factory = TwoWheelerFactory()
+    two_wheeler_client = Client(two_wheeler_factory)
+    two_wheeler = two_wheeler_client.get_vehicle()
+    two_wheeler.print_vehicle()
+
+    four_wheeler_factory = FourWheelerFactory()
+    four_wheeler_client = Client(four_wheeler_factory)
+    four_wheeler = four_wheeler_client.get_vehicle()
+    four_wheeler.print_vehicle()
